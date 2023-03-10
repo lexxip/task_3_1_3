@@ -1,11 +1,40 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-    <title>Spring Security Example</title>
-</head>
-<body>
-<h1>User, welcome spring boot security page!</h1>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title th:text="|User info - ${user.getFirstName()} ${user.getLastName()}|"></title>
+    </head>
+
+    <body>
+
+        <div th:text="|ID: ${user.getId()}|"></div>
+        <div th:text="|Username: ${user.getUsername()}|"></div>
+        <div th:text="|Password: ${user.getPassword()}|"></div>
+        <div th:text="|First Name: ${user.getFirstName()}|"></div>
+        <div th:text="|Last Name: ${user.getLastName()}|"></div>
+        <div th:text="|Age: ${user.getAge()}|"></div>
+        <div th:text="|Email: ${user.getEmail()}|"></div>
+
+        <div th:each="role : ${user.getRoles()}" th:text="|Role:   ${role.getName()}|"></div>
+
+        <br/>
+
+        <div th:if="${f}">
+            <form th:method="GET" th:action="@{/admin/userid_{id}/edit(id=${user.getId()})}">
+                <input type="submit" value="EDIT"/>
+            </form>
+
+            <form th:method="DELETE" th:action="@{/admin/userid_{id}(id=${user.getId()})}">
+                <input type="submit" value="DELETE"/>
+            </form>
+        </div>
+
+        <br/>
+        <a href="/logout">LOGOUT</a>
 
 
-</body>
+    </body>
+
 </html>
