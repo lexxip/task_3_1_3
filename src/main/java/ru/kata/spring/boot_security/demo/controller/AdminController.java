@@ -27,7 +27,7 @@ public class AdminController {
 
     @GetMapping( "/user")
     public String userInfo(Principal principal, Model model) {
-        model.addAttribute("user", userService.findUserByUsername(principal.getName()));
+        model.addAttribute("user", userService.loadUserByUsername(principal.getName()));
         model.addAttribute("f", isAdmin(principal));
         return "user";
     }
@@ -80,8 +80,8 @@ public class AdminController {
     }
 
     private boolean isAdmin(Principal principal) {
-        return userService.findUserByUsername(principal.getName()).getRoles()
-                .stream().map(role -> role.getName()).collect(Collectors.toList()).contains("ROLE_ADMIN");
+        return userService.loadUserByUsername(principal.getName()).getAuthorities()
+                .stream().map(role -> role.getAuthority()).collect(Collectors.toList()).contains("ROLE_ADMIN");
     }
 
 }

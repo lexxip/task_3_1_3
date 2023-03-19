@@ -1,5 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +25,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
-
-    @Override
-    public User findUserByUsername(String username) {
-        userDb = userRepository.findByUsername(username);
-        return loadUser(userDb);
     }
 
     @Override
@@ -72,6 +68,19 @@ public class UserServiceImpl implements UserService {
         userRepository.save(upLoadUser(localUser));
         userDb = new User();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return user;
+    }
+
 
     private User loadUser(User user) {
         User localUser = new User();
